@@ -1,6 +1,32 @@
-.box ,.xox, .aox, .wox{
-  width:10px;
+.box-top-left,
+.box-top-center-right,
+.box-top-center-left,
+.box-top-right {
+  width: 10px;
   height: 10px;
   background-color: red;
   position: absolute;
+}
+
+#card-plane {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#card-opponent {
+  flex: start;
+  width: 15vw;
+  height: 40vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+}
+
+#card-player {
+  flex: end;
+  width: 15vw;
+  height: 40vh;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
 }
