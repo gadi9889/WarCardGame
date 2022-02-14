@@ -13,7 +13,6 @@ const cardValues = [
   "K",
   "A",
 ];
-const cardVariations = 4;
 
 function cardShuffle(deck) {
   for (let i = 0; i < deck.length; i++) {
@@ -26,10 +25,10 @@ function cardShuffle(deck) {
 }
 
 module.exports.cardStackGenerator = function() {
-    let type = ["clubs", "spades", "hearts", "diamonds"];
+    let type = ["C", "S", "H", "D"];
     let deck = [];
   
-    for (let i = 0; i < cardVariations; i++) {
+    for (let i = 0; i < type.length; i++) {
       for (let j = 0; j < cardValues.length; j++) {
         deck.push({
           symbol: cardValues[j],
@@ -40,6 +39,5 @@ module.exports.cardStackGenerator = function() {
       }
     }
     deck = cardShuffle(deck);
-    console.log(deck);
     return deck;
 }
