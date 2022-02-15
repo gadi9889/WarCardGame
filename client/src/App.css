@@ -9,7 +9,7 @@
 }
 
 #card-plane {
-  height: 100vh;
+  height: 150vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,7 +34,7 @@
   height: inherit;
 }
 
-svg {
+img {
   width: 100%;
   height: 100%;
 }

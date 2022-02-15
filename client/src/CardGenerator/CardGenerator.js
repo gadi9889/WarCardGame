@@ -27,7 +27,6 @@ function cardShuffle(deck) {
 module.exports.cardStackGenerator = function() {
     let type = ["C", "S", "H", "D"];
     let deck = [];
-  
     for (let i = 0; i < type.length; i++) {
       for (let j = 0; j < cardValues.length; j++) {
         deck.push({
@@ -38,6 +37,6 @@ module.exports.cardStackGenerator = function() {
         });
       }
     }
-    deck = cardShuffle(deck);
+    deck = cardShuffle(deck)
     return deck;
 }
