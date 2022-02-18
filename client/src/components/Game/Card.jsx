@@ -4,7 +4,7 @@ import * as Components from '../../exports/exports';
 import * as img from '../../exports/imgexports';
 
 export default function Card({card,id}) {
-    const [showCard, setShowCard] = useState()
+    const [showCard, setShowCard] = useState(img.C2)
 
     // let CardSvg = [
     //     [<Components.C2 />,<Components.C3 />,<Components.C4 />,<Components.C5 />,<Components.C6 />,<Components.C7 />,<Components.C8 />,<Components.C9 />,<Components.C10 />,<Components.CJ />,<Components.CQ />,<Components.CK />,<Components.CA />],
@@ -38,7 +38,7 @@ export default function Card({card,id}) {
         else if(card.type == "S") {
             setShowCard(cardImg[3][card.value-2])
         }
-    },[])
+    })
     
 
     return (

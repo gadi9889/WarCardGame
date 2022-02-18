@@ -1,5 +1,26 @@
 {
   "devDependencies": {
     "prettier": "2.5.1"
-  }
+  },
+  "dependencies": {
+    "mysql": "^2.18.1"
+  },
+  "name": "warcardgame",
+  "description": "Using MERN and animejs",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start":"cd server && node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gadi9889/WarCardGame.git"
+  },
+  "author": "Gad Abo Rabia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gadi9889/WarCardGame/issues"
+  },
+  "homepage": "https://github.com/gadi9889/WarCardGame#readme"
 }

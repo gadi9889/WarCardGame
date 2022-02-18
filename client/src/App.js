@@ -7,9 +7,15 @@ import { cardStackGenerator } from "./CardGenerator/CardGenerator";
 
 function App() {
   const [arr, setArr] = useState(cardStackGenerator())
-
   const [playerCards, setPlayerCards] = useState((arr.slice(26)));
   const [opponentCards, setOpponentCards] = useState((arr.slice(0,25)));
+  const [showMessage, setShowMessage] = useState(false)
+
+  const newArr = () => {
+    setArr(cardStackGenerator())
+    setOpponentCards((arr.slice(0,25)))
+    setPlayerCards((arr.slice(26)))
+  }
 
   return (
     <div
@@ -18,8 +24,9 @@ function App() {
     >
       <Routes>
         <Route exact path="/" element={<HomePage />} />
-        <Route exact path="/game" element={<Game playerCards={playerCards} opponentCards={opponentCards} />} />
+        <Route exact path="/game" element={<Game playerCards={playerCards} opponentCards={opponentCards} restartFunc={newArr}/>} />
       </Routes>
+      
     </div>
   );
 }
