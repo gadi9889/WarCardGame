@@ -28,8 +28,7 @@ router.post("/signup", async (req, res) => {
       if (err) {
         return res.status(400).send();
       }
-
-      let sql = `INSERT INTO kingdoms (points,region_name,name) VALUES (0,'${req.body.region}','${req.body.name}')`;
+      sql = `INSERT INTO kingdoms (points,region_name,name) VALUES (0,'${req.body.region}','${req.body.name}')`;
       con.query(sql, (err, result) => {
         if (err) {
           return res.status(500).send();
@@ -50,7 +49,6 @@ router.post("/login", (req, res) => {
       if (err) {
         return res.status(500).send();
       }
-      let message;
       for (let i = 0; i < result.length; i++) {
         let user = result[i];
         if (user.kingdom_name == req.body.name) {

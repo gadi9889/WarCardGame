@@ -1,6 +1,8 @@
 import anime from "animejs";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
 import Card from "./Card";
 
 export default function Game({
@@ -9,6 +11,7 @@ export default function Game({
   restartFunc,
   messageOn,
   messageShow,
+  username,
 }) {
   const [playerCard, setPlayerCard] = useState(
     playerCards[playerCards.length - 1]
@@ -19,11 +22,13 @@ export default function Game({
   const [playerScore, setPlayerScore] = useState(0);
   const [opponentScore, setOpponentScore] = useState(0);
   const [backgroundColor, setBackgroundColor] = useState("rgba(0,0,0,0)");
+  const [buttonText, setButtonText] = useState("Hit");
 
   const animationOpponent = useRef(null);
   const animationPlayer = useRef(null);
   const animationBackground = useRef(null);
 
+  let navigate = useNavigate();
   // let cardImg = [
   //     [img.C2,img.C3,img.C4,img.C5,img.C6,img.C7,img.C8,img.C9,img.C10,img.CJ,img.CQ,img.CK,img.CA],
   //     [img.D2,img.D3,img.D4,img.D5,img.D6,img.D7,img.D8,img.D9,img.D10,img.DJ,img.DQ,img.DK,img.DA],
@@ -38,12 +43,49 @@ export default function Game({
 
       setPlayerCard(playerCards.pop());
       setOpponentCard(opponentCards.pop());
+    } else if (buttonText == "Hit") {
+      let title;
+      let body;
+      let varinat;
+      if (playerScore < opponentScore) {
+        title = "We Lost The War!";
+        body = "Our kingdom suffered a great loss. We will come back stronger!";
+        varinat = "danger";
+
+        axios
+          .post(`/api/games/loss`, {
+            name: username,
+          })
+          .catch((err) => console.log(err));
+      } else if (playerScore > opponentScore) {
+        title = "We Won The War!";
+        body = "We have defeated the enemy and made our region stronger";
+        varinat = "success";
+
+        axios
+          .post(`/api/games/win`, {
+            name: username,
+          })
+          .catch((err) => console.log(err));
+      } else {
+        title = "We Made A Truce With The Opponent";
+        body = "Our forces have depleted. A truce was our only option";
+        varinat = "secondary";
+      }
+      setButtonText("Again?");
+      messageShow(title, body, varinat);
     } else {
-      messagwS;
+      setButtonText("Hit");
+      setPlayerScore(0);
+      setOpponentScore(0);
+      animationPlayer.current.restart();
+      animationOpponent.current.restart();
+      messageOn(false);
+      restartFunc();
     }
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     animationOpponent.current = anime({
       autoplay: false,
       targets: "#card-opponent",
@@ -104,12 +146,15 @@ export default function Game({
       </div>
 
       <div>
+        <Button id="hit-button" onClick={() => hitHandle()}>
+          {buttonText}
+        </Button>
+        <br />
         <Button
-          id="hit-button"
-          style={{ width: "3vw", height: "4vh" }}
-          onClick={() => hitHandle()}
+          id="leaderboard-button"
+          onClick={() => navigate("/leaderboard")}
         >
-          Hit
+          Hall Of Fame
         </Button>
       </div>
 

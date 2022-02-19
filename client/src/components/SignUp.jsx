@@ -9,8 +9,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignUp({ messageShow, messageOn }) {
   let navigate = useNavigate();
-  let title = "Oh snap! You got an error!";
-  let body = "It seems like you forgot something..";
   let variant = "danger";
 
   const [validated, setValidated] = useState(false);
@@ -21,7 +19,9 @@ export default function SignUp({ messageShow, messageOn }) {
     const form = event.currentTarget;
     if (form.checkValidity() == false) {
       setValidated(true);
-      messageShow(title, body);
+      let title = "Oh snap! You got an error!";
+      let body = "It seems like you forgot something..";
+      messageShow(title, body, variant);
       return;
     }
     axios
@@ -34,9 +34,10 @@ export default function SignUp({ messageShow, messageOn }) {
         messageOn(false);
         navigate("/");
       })
-      .catch(() => {
-        title = "Unlucky";
-        body = "Kingdom name is already taken...";
+      .catch((err) => {
+        console.log(err);
+        let title = "Unlucky";
+        let body = "Kingdom name is already taken...";
         messageShow(title, body, variant);
       });
   };

@@ -1,17 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createBrowserHistory } from "history";
+import axios from "axios";
 import "./App.css";
 import HomePage from "./components/HomePage";
 import Game from "./components/Game/Game";
 import Alert from "react-bootstrap/Alert";
 import { cardStackGenerator } from "./CardGenerator/CardGenerator";
 import SignUp from "./components/SignUp";
+import Leaderboard from "./components/Leaderboard";
 
 function App() {
   const [arr, setArr] = useState(cardStackGenerator());
@@ -21,6 +18,11 @@ function App() {
   const [alertTitle, setAlertTitle] = useState("Oh snap! You got an error!");
   const [alertBody, setAlertBody] = useState("Check The Username or Password");
   const [variant, setVariant] = useState("danger");
+  const [username, setUsername] = useState();
+  const [kingdomLeaderboard, setKingdomLeaderboard] = useState([]);
+  const [regionLeaderboard, setRegionLeaderboard] = useState([]);
+
+  let history = createBrowserHistory();
 
   const newArr = () => {
     setArr(cardStackGenerator());
@@ -35,6 +37,18 @@ function App() {
     setVariant(variant);
   };
 
+  useEffect(() => {
+    history.listen(() => {
+      setShowMessage(false);
+    });
+    axios.get(`api/games/kingdoms`).then((res) => {
+      setKingdomLeaderboard(res.data);
+    });
+    axios.get(`api/games/regions`).then((res) => {
+      setRegionLeaderboard(res.data);
+    });
+  }, []);
+
   return (
     <div
       className="d-flex justify-content-center align-content-center user-select-none bg-dark flex-wrap text-center text-white"
@@ -42,10 +56,13 @@ function App() {
     >
       <Routes>
         <Route
-          exact
           path="/"
           element={
-            <HomePage messageShow={messageShow} messageOn={setShowMessage} />
+            <HomePage
+              messageShow={messageShow}
+              messageOn={setShowMessage}
+              setUsername={setUsername}
+            />
           }
         />
         <Route
@@ -53,10 +70,11 @@ function App() {
           path="/game"
           element={
             <Game
+              username={username}
               playerCards={playerCards}
               opponentCards={opponentCards}
               restartFunc={newArr}
-              messageOff={setShowMessage}
+              messageOn={setShowMessage}
               messageShow={messageShow}
             />
           }
@@ -64,8 +82,19 @@ function App() {
         <Route
           exact
           path="/signup"
-          element={<SignUp messageShow={messageShow} />}
-          messageOff={setShowMessage}
+          element={
+            <SignUp messageShow={messageShow} messageOn={setShowMessage} />
+          }
+        />
+        <Route
+          exact
+          path="/leaderboard"
+          element={
+            <Leaderboard
+              kingdomLeaderboard={kingdomLeaderboard}
+              regionLeaderboard={regionLeaderboard}
+            />
+          }
         />
       </Routes>
       {showMessage && (

@@ -7,7 +7,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
 
-export default function ({ messageShow, messageOn }) {
+export default function ({ messageShow, messageOn, setUsername }) {
   let navigate = useNavigate();
   let title = "Oh snap! You got an error!";
   let body = "Check The Username or Password";
@@ -24,12 +24,14 @@ export default function ({ messageShow, messageOn }) {
       messageShow(title, body);
       return;
     }
+
     axios
       .post(`/api/users/login`, {
         name: form["kName"].value,
         password: form["password"].value,
       })
       .then(() => {
+        setUsername(form["kName"].value);
         messageOn(false);
         navigate("/game");
       })
