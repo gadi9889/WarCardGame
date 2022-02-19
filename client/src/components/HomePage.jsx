@@ -1,27 +1,41 @@
 import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
 import anime from "animejs/lib/anime.es.js";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import InputGroup from "react-bootstrap/InputGroup";
+import Alert from "react-bootstrap/Alert";
 import { useNavigate } from "react-router-dom";
 
-export default function () {
-  const animationRef1 = useRef(null);
-
+export default function ({ messageShow, messageOn }) {
   let navigate = useNavigate();
+  let title = "Oh snap! You got an error!";
+  let body = "Check The Username or Password";
+  let variant = "danger";
 
-  const [validated, setValidated] = useState();
+  const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
+    if (form.checkValidity() == false) {
+      setValidated(true);
+      messageShow(title, body);
       return;
     }
-
-    setValidated(true);
-    navigate("/game");
+    axios
+      .post(`/api/users/login`, {
+        name: form["kName"].value,
+        password: form["password"].value,
+      })
+      .then(() => {
+        messageOn(false);
+        navigate("/game");
+      })
+      .catch((res) => {
+        messageShow(title, body, variant);
+      });
   };
 
   useEffect(() => {
@@ -104,10 +118,8 @@ export default function () {
       {boxes().map((box) => {
         return box;
       })}
-      <div
-        className="rounded-2 bg-dark bg-gradient"
-        style={{ padding: "10px" }}
-      >
+      <div className="rounded-2 bg-dark bg-gradient p-4">
+        <h2 className="text-dark opacity-75">SignIn</h2>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group controlId="validationKingdomName">
             <Form.Label>Kingdom</Form.Label>
@@ -122,30 +134,31 @@ export default function () {
                 required
               />
             </InputGroup>
-            <Form.Text muted>
-              Kingdom Name Must Be At Least 5 Letters Long
-            </Form.Text>
           </Form.Group>
-          <Form.Check
-            inline
-            label="Red"
-            className="bg-danger rounded-2"
-            name="redBlack"
-            type="radio"
-            checked
-          />
-          <Form.Check
-            inline
-            className="bg-dark rounded-2"
-            label="Black"
-            name="redBlack"
-            type="radio"
-          />
-          <Button type="submit" className="bg-dark">
+          <Form.Group controlId="validationPasswordName">
+            <Form.Label>Password</Form.Label>
+            <InputGroup hasValidation>
+              <InputGroup.Text id="inputGroupPrepend">*</InputGroup.Text>
+              <Form.Control
+                type="password"
+                name="password"
+                placeholder="Password..."
+                aria-describedby="inputGroupPrepend"
+                pattern=".{5,}"
+                required
+              />
+            </InputGroup>
+          </Form.Group>
+
+          <Button type="submit" className="bg-dark m-3">
             Enter
           </Button>
         </Form>
       </div>
+      <Alert variant="info">
+        don't have an account?
+        <Alert.Link href="/signup">Sign up</Alert.Link>. Give it a click
+      </Alert>
     </div>
   );
 }
